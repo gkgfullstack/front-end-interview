@@ -23,3 +23,7 @@ export interface ApiInfo {
     apis: { [key: string]: ApiDetail };
   }
   
+  export interface Provider {
+    id: string;
+    name: string;
+  }

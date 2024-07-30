@@ -1,45 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetchData from '../hooks/useFetchData';
-import styled from 'styled-components';
+import { Provider } from '../types/apiInterface';
+import {
+  ListCom,
+  Button,
+  ListComUL,
+  ApiTitle,
+  ButtonArrow,
+  ButtonSVG,
+  ApiTitleButton,
+} from './SideBarStyle';
 
-interface Provider {
-  id: string;
-  name: string;
-}
-const Button = styled.button`
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 100%;
-  text-align: left;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-const ListCom = styled.li`
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  border-radius: 5px;
-  list-style: none;
-`;
-const ListComUL = styled.ul`
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-`;
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
+  const [showTitle, setShowTitle] = useState<string | null>(null);
   const providersURL = 'https://api.apis.guru/v2/providers.json';
   const {
     data: providersData,
@@ -64,16 +39,43 @@ const SideBar: React.FC = () => {
     return <div>Error loading providers: {errorMessage}</div>;
   }
 
+  const showtitleHandler = (id: string) => {
+    setShowTitle((itemId) => (itemId === id ? null : id));
+  };
   return (
     <>
-      <h2>Select Providers</h2>
+      <ApiTitle>Select Providers</ApiTitle>
       <ListComUL>
         {Array.isArray(providers) &&
           providers.map((provider: Provider) => (
             <ListCom key={provider.id}>
+              <ButtonArrow onClick={() => showtitleHandler(provider.id)}>
+                {provider.id === showTitle ? (
+                  <ButtonSVG
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M7 14l5-5 5 5H7z" fill="#000000" />
+                  </ButtonSVG>
+                ) : (
+                  <ButtonSVG
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M7 10l5 5 5-5H7z" />
+                  </ButtonSVG>
+                )}
+              </ButtonArrow>
               <Button onClick={() => onSelectProvider(provider)}>
                 {provider.name}
               </Button>
+              <ApiTitleButton>
+                {provider.id === showTitle && provider.name}
+              </ApiTitleButton>
             </ListCom>
           ))}
       </ListComUL>

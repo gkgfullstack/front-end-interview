@@ -17,15 +17,12 @@ const ScreensTwo: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log('providerName====', providerName);
-  console.log('apis====', apis);
-
   useEffect(() => {
     const fetchAPIs = async () => {
       if (providerName) {
         try {
           const response = await fetch(
-            `https://api.apis.guru/v2/${providerName}.json`
+            `https://api.apis.guru/v2/${providerName}.json`,
           );
           if (!response.ok) throw new Error('Network response was not ok');
           const data: ApiResponse = await response.json();
